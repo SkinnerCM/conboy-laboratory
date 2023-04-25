@@ -1,5 +1,4 @@
-This repository accompanies the paper "Predictors of chronological age 
-and the polynomial non-linearity of biological aging." by Colin M. Skinner,
+This repository accompanies the paper "Fail-tests of DNA methylation clocks and alternatives for predicting and measuring biological age" by Colin M. Skinner,
 Joshua Blanchard, Connor Luellen, Xiaoyue Mei, Michael Conboy and Irina
 Conboy
 
