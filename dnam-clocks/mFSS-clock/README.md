@@ -2,6 +2,10 @@
 
 ## The repository contains links to the data used in the study as well as all code relevant to generating the figures and tables presented in the paper.
 
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
+
 ## Setting Up the Environment
 
 To replicate the environment used for this project, follow these steps:
