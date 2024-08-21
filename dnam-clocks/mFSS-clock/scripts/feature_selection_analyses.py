@@ -24,7 +24,7 @@ def prep_dataset(data):
     data.columns = ['CpG', 'Weight']
     
     # Sort the data by CpG sites
-    data = data.sort_values('CpG')
+    data = data.sort_values('CpG', ignore_index=True)
     
     return data
 
@@ -192,4 +192,116 @@ def het_r(data, model, ages):
         
     return het_rs
 
+def get_preds(inputs, model):
+    
+    """
+    Generate predictions for a given model using the provided input data.
 
+    This function checks if the input data contains an intercept column; if not, 
+    it adds one. It then verifies that the features in the input data match the 
+    features expected by the model. If they do, it computes predictions by taking 
+    the dot product of the model weights and the input features for each row of data.
+
+    Parameters:
+    -----------
+    inputs : pandas.DataFrame
+        A DataFrame containing the input data. Each row represents a sample, and 
+        each column represents a feature. If the first column is not named 'Intercept', 
+        the function will add a column of ones as the intercept.
+        
+    model : object
+        A model object that has the following attributes:
+        - `CpG`: a list of feature names that the model expects (including 'Intercept').
+        - `Weight`: a numpy array or pandas Series containing the model weights, 
+          where the order corresponds to the features listed in `CpG`.
+
+    Returns:
+    --------
+    list
+        A list of predictions, one for each row in the input data.
+
+    Raises:
+    -------
+    ValueError
+        If the features in the input data do not match the features expected by the model.
+    """
+    
+    if inputs.columns[0]!='Intercept':
+        # Insert a column of ones at the front
+        inputs.insert(0, 'Intercept', 1)
+    
+    if inputs.columns.tolist()[1:]==model.CpG.tolist()[1:]:
+        
+        preds = []
+
+        for row in inputs.index.tolist():
+            # Calculate the dot product
+            preds+= [model.Weight.dot(inputs.loc[row].values)]
+        return preds
+        
+    else:
+        return print('error: feature mismatch')
+    
+    
+def u_test(model, data1, data2):
+    
+    """
+    Perform the Mann-Whitney U test on the beta values of two different sample groups 
+    for a model's selected CpGs.
+
+    This function computes the U statistic, p-value, and the negative logarithm (base 10) 
+    of the p-value for each CpG site listed in the model, excluding the intercept. 
+    It uses the Mann-Whitney U test, a nonparametric test for assessing whether two 
+    independent samples come from the same distribution.
+
+    Parameters:
+    -----------
+    model : object
+        A model object that contains the following attribute:
+        - `CpG`: a list of CpG site names, where the first element is typically 'Intercept' 
+          and the rest are CpG site identifiers.
+          
+    data1 : pandas.DataFrame
+        A DataFrame containing the beta values for the first group of samples. Each row 
+        represents a sample, and each column represents a CpG site.
+        
+    data2 : pandas.DataFrame
+        A DataFrame containing the beta values for the second group of samples. Each row 
+        represents a sample, and each column represents a CpG site.
+
+    Returns:
+    --------
+    stats : list
+        A list of U statistics, one for each CpG site in the model (excluding the intercept).
+    
+    p_vals : list
+        A list of p-values corresponding to each U statistic.
+    
+    log_p : list
+        A list of the negative logarithm (base 10) of each p-value.
+
+    Notes:
+    ------
+    - The intercept (first CpG in the model) is excluded from the analysis.
+    - The Mann-Whitney U test is a nonparametric test, making it suitable for comparing 
+      distributions without assuming normality.
+    
+    """
+        
+    from scipy.stats import mannwhitneyu
+    from math import log10
+    # Perform the Mann-Whitney U test
+    p_vals=[]
+    stats =[]
+    log_p=[]
+    
+    for cg in model.CpG[1:]:
+
+        
+        stat, p = mannwhitneyu(data1[cg].astype(float), data2[cg].astype(float))
+        
+        log_p += [-log10(p)]
+        stats+=[stat]
+        p_vals +=[p]
+        
+    return stats, p_vals, log_p
