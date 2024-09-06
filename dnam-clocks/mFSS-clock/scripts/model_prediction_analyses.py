@@ -2,9 +2,9 @@ import pandas as pd
 import numpy as np 
 from scipy import stats
 
-def prep_dataset(data):
+def prep_model(model):
     """
-    Prepare a dataset for calculating age correlations.
+    Prepare a model for making predictions.
 
     This function expects a DataFrame with two columns:
     - The first column should contain the CpG sites for the model.
@@ -14,18 +14,18 @@ def prep_dataset(data):
     by the 'CpG' column.
 
     Parameters:
-    data (pd.DataFrame): The input DataFrame containing the dataset.
+    data (pd.DataFrame): The input DataFrame containing the model features and their weights.
 
     Returns:
     pd.DataFrame: The processed DataFrame with columns renamed and sorted by 'CpG'.
     """
     # Ensure the data has the correct column names
-    data.columns = ['CpG', 'Weight']
+    model.columns = ['CpG', 'Weight']
     
     # Sort the data by CpG sites
-    data = data.sort_values('CpG')
+    model = model.sort_values('CpG', ignore_index=True)
     
-    return data
+    return model
 
 def get_preds(inputs, model):
     
@@ -76,4 +76,202 @@ def get_preds(inputs, model):
         
     else:
         return print('error: feature mismatch')
+
+    
+def get_residuals(data, metadata, model, model_name):
+    
+    """
+    Calculate residuals for a given model's predictions on a dataset.
+
+    This function adds model predictions to the metadata and computes the 
+    residuals by subtracting the actual age from the predicted values. 
+    It is designed for use with a specific cohort from the V7 combined 
+    composite dataset (GSE42861, GSE125105, GSE72774, GSE106648).
+
+    Parameters:
+    -----------
+    data : pandas.DataFrame
+        The input data used for making predictions with the model.
+        
+    metadata : pandas.DataFrame
+        Metadata containing the true age values for the dataset, and which 
+        will also be used to store the model's predictions under `model_name`.
+        
+    model : sklearn-like model
+        The trained machine learning model used to generate predictions.
+        
+    model_name : str
+        A string indicating the column name in the metadata where the model's 
+        predictions will be stored.
+
+    Returns:
+    --------
+    residuals : pandas.Series
+        A series of residuals calculated as the difference between the model's 
+        predictions and the actual age values from the metadata.
+    """
+    
+    #get the model predictions for the dataset and add them to the relevant metadata
+    metadata.loc[:, model_name] = get_preds(data, model)
+    
+    
+    residuals = metadata[model_name]-metadata.age
+    
+    return residuals
+
+def get_mu_std(residuals):
+    
+    """
+    Fit a normal distribution to the residuals and return the mean (mu) and 
+    standard deviation (std).
+
+    This function fits a normal distribution to the provided residuals using 
+    maximum likelihood estimation and returns the estimated mean and standard 
+    deviation.
+
+    Parameters:
+    -----------
+    residuals : array-like
+        A series or array of residuals to which a normal distribution is fitted.
+
+    Returns:
+    --------
+    mu : float
+        The estimated mean of the fitted normal distribution.
+
+    std : float
+        The estimated standard deviation of the fitted normal distribution.
+    """
+    
+    # Fit normal distribution parameters
+    params_norm = stats.norm.fit(residuals)
+    mu, std = params_norm
+    return mu, std
+
+def get_cutoffs(mu, std, alpha=0.05):
+    
+    """
+    Calculate the lower and upper cutoffs for a normal distribution given 
+    the mean (mu), standard deviation (std), and significance level (alpha).
+
+    This function calculates the cutoff values that correspond to the lower 
+    and upper `alpha/2` percentiles of a normal distribution with a specified 
+    mean and standard deviation. These cutoffs represent the bounds for a 
+    two-tailed test.
+
+    Parameters:
+    -----------
+    mu : float
+        The mean of the normal distribution.
+        
+    std : float
+        The standard deviation of the normal distribution.
+        
+    alpha : float, optional
+        The significance level for the two-tailed test. Default is 0.05, 
+        representing a 95% confidence interval (cutoffs at 2.5% and 97.5%).
+
+    Returns:
+    --------
+    lower_cutoff : float
+        The lower cutoff value (alpha/2 percentile).
+    
+    upper_cutoff : float
+        The upper cutoff value (1 - alpha/2 percentile).
+    """
+     
+    lower_cutoff = round(stats.norm.ppf(alpha/2, loc=mu, scale=std),1)
+    upper_cutoff = round(stats.norm.ppf(1 - alpha/2, loc=mu, scale=std),1)
+    
+    return lower_cutoff, upper_cutoff
+
+def create_residual_distribution(residuals, mu, std, model_name):
+    
+    """
+    Create a probability density function (PDF) for the residuals based on 
+    a fitted normal distribution and return the distribution as a DataFrame.
+
+    This function generates a range of values from the minimum to the maximum 
+    of the residuals, computes the PDF using the provided mean (mu) and 
+    standard deviation (std), and returns a DataFrame containing the error 
+    values, the density of the distribution, and the model name.
+
+    Parameters:
+    -----------
+    residuals : array-like
+        A series or array of residuals used to define the range for the PDF.
+        
+    mu : float
+        The mean of the fitted normal distribution.
+        
+    std : float
+        The standard deviation of the fitted normal distribution.
+        
+    model_name : str
+        The name of the model, used for labeling the distribution.
+
+    Returns:
+    --------
+    model_fit : pandas.DataFrame
+        A DataFrame containing the following columns:
+        - 'Error': The range of error values (x-axis) for the distribution.
+        - 'Density': The corresponding density values (y-axis) from the PDF.
+        - 'Model': The name of the model associated with the distribution.
+    """
+    
+    # Create PDFs (probability density functions) of the fitted distributions
+    xmin = residuals.min()
+    xmax = residuals.max()
+    model_x = np.linspace(xmin, xmax, 1000)
+    model_resids = stats.norm.pdf(model_x, mu, std)
+
+    model_fit = pd.DataFrame({'Error': model_x, 'Density': model_resids, 'Model': model_name})
+    
+    return model_fit
+
+def model_errs_and_dist(data, metadata, model, model_name):
+    
+    """
+    Calculate residuals, fit a normal distribution, and generate a residual distribution 
+    for a given model, returning key statistics and the distribution.
+
+    This function computes the residuals from the model predictions, fits a normal 
+    distribution to the residuals, calculates the cutoffs for the distribution, and 
+    creates the residual distribution. It returns a list of statistics and a DataFrame 
+    of the residual distribution for the model.
+
+    Parameters:
+    -----------
+    data : pandas.DataFrame
+        The input data used for making predictions with the model.
+    
+    metadata : pandas.DataFrame
+        The metadata containing true age values and used to store the model predictions.
+    
+    model : sklearn-like model
+        The machine learning model used to generate predictions.
+    
+    model_name : str
+        The name of the model, used for labeling statistics and the distribution.
+
+    Returns:
+    --------
+    model_stats : list of tuples
+        A list containing a tuple with the model name, lower cutoff, upper cutoff, 
+        and the mean (mu) of the residuals rounded to 2 decimal places.
+
+    model_fit : pandas.DataFrame
+        A DataFrame containing the error values, density, and model name for the 
+        residual distribution.
+    """
+    
+    model = prep_model(model)
+    residuals = get_residuals(data,metadata, model, model_name)
+    mu, std = get_mu_std(residuals)
+    cutoffs = get_cutoffs(mu, std)
+    model_fit = create_residual_distribution(residuals, mu, std, model_name)
+    
+    model_stats = [(model_name,cutoffs[0], cutoffs[1], round(mu, 2))]
+    
+    return model_stats, model_fit
 
