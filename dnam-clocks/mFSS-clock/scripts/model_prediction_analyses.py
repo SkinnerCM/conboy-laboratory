@@ -76,9 +76,68 @@ def get_preds(inputs, model):
         
     else:
         return print('error: feature mismatch')
+    
+def get_horvath_preds(inputs, model):
+    
+    """
+    Compute Horvath clock predictions based on input features and model weights.
+
+    This function calculates predictions after applying to the inputs the inverse log transform
+    used by the Horvath clock model. It first checks if the inputs have an 'Intercept' column, adding one if not. 
+    Then, it verifies that the CpG features in the input match those in the model 
+    before calculating predictions using a dot product of the model's weights 
+    and the transformed input feature values.
+
+    Parameters:
+    -----------
+    inputs : pandas.DataFrame
+        A DataFrame of input features for prediction. The first column should be 
+        an 'Intercept' column (a column of ones), and the remaining columns should 
+        match the CpG sites expected by the model.
+        
+    model : pandas.DataFrame
+        A DataFrame representing the Horvath clock model with 'Weight' and 'CpG' 
+        columns. 'Weight' is used for the dot product calculation with the inputs, 
+        and 'CpG' should match the feature names in the input data.
+
+    Returns:
+    --------
+    preds : list
+        A list of Horvath clock predictions for each input row.
+    
+    Raises:
+    -------
+    ValueError:
+        If there is a feature mismatch between the input data and the model's CpG sites.
+    """
+    
+    if inputs.columns[0]!='Intercept':
+        # Insert a column of ones at the front
+        inputs.insert(0, 'Intercept', 1)
+    
+    if inputs.columns.tolist()[1:]==model.CpG.tolist()[1:]:
+        
+        preds = []
+
+        for row in inputs.index.tolist():
+            # Calculate the dot product
+            out = model.Weight.dot(inputs.loc[row].values)
+            
+            if out <= 0:
+                
+                preds+=[21*10**out -1]
+                
+            else:
+                
+                preds+=[21*out+20]
+                
+        return preds
+        
+    else:
+        return print('error: feature mismatch')
 
     
-def get_residuals(data, metadata, model, model_name):
+def get_residuals(preds, metadata, model_name):
     
     """
     Calculate residuals for a given model's predictions on a dataset.
@@ -112,7 +171,7 @@ def get_residuals(data, metadata, model, model_name):
     """
     
     #get the model predictions for the dataset and add them to the relevant metadata
-    metadata.loc[:, model_name] = get_preds(data, model)
+    metadata.loc[:, model_name] = preds
     
     
     residuals = metadata[model_name]-metadata.age
@@ -229,7 +288,7 @@ def create_residual_distribution(residuals, mu, std, model_name):
     
     return model_fit
 
-def model_errs_and_dist(data, metadata, model, model_name):
+def model_errs_and_dist(data, metadata, model, model_name, horvath_model=False):
     
     """
     Calculate residuals, fit a normal distribution, and generate a residual distribution 
@@ -253,6 +312,9 @@ def model_errs_and_dist(data, metadata, model, model_name):
     
     model_name : str
         The name of the model, used for labeling statistics and the distribution.
+        
+    horvath_model : bool
+        Whether or not the model is Horvath
 
     Returns:
     --------
@@ -266,7 +328,14 @@ def model_errs_and_dist(data, metadata, model, model_name):
     """
     
     model = prep_model(model)
-    residuals = get_residuals(data,metadata, model, model_name)
+    
+    if horvath_model:
+        preds = get_horvath_preds(data, model)
+        
+    else:
+        preds = get_preds(data, model)
+        
+    residuals = get_residuals(preds,metadata, model_name)
     mu, std = get_mu_std(residuals)
     cutoffs = get_cutoffs(mu, std)
     model_fit = create_residual_distribution(residuals, mu, std, model_name)
@@ -275,3 +344,44 @@ def model_errs_and_dist(data, metadata, model, model_name):
     
     return model_stats, model_fit
 
+def cohens_d(s1, s2):
+    
+    """
+    Calculate Cohen's d, a measure of effect size, between two independent samples.
+
+    This function computes Cohen's d by calculating the difference between the means 
+    of two samples (s1 and s2), and dividing by the pooled standard deviation. 
+    Cohen's d is commonly used to indicate the standardized difference between two means.
+
+    Parameters:
+    -----------
+    s1 : array-like
+        The first sample of data (e.g., control group).
+    
+    s2 : array-like
+        The second sample of data (e.g., treatment group).
+
+    Returns:
+    --------
+    d : float
+        The computed Cohen's d value, representing the effect size.
+
+    Notes:
+    ------
+    - A small effect size is around 0.2, medium is 0.5, and large is 0.8, 
+      though these thresholds can vary based on context.
+    """
+    
+    import statistics
+    
+
+    diff = s2.mean()-s1.mean()
+    
+    n1 = len(s1)
+    n2 = len(s2)
+    sd1 = statistics.stdev(s1)
+    sd2 = statistics.stdev(s2)
+    
+    pooled_sd = np.sqrt(((n1-1)*sd1**2+(n2-1)*sd2**2)/(n1+n2-2))
+    
+    return diff/pooled_sd
