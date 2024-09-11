@@ -1,32 +1,7 @@
 import pandas as pd 
 import numpy as np 
 from scipy import stats
-
-
-def prep_model(model):
-    """
-    Prepare a model for making predictions.
-
-    This function expects a DataFrame with two columns:
-    - The first column should contain the CpG sites for the model.
-    - The second column should contain the corresponding weights or importance scores.
-
-    The function renames the columns to 'CpG' and 'Weight' and sorts the DataFrame
-    by the 'CpG' column.
-
-    Parameters:
-    data (pd.DataFrame): The input DataFrame containing the model features and their weights.
-
-    Returns:
-    pd.DataFrame: The processed DataFrame with columns renamed and sorted by 'CpG'.
-    """
-    # Ensure the data has the correct column names
-    model.columns = ['CpG', 'Weight']
-    
-    # Sort the data by CpG sites
-    model = model.sort_values('CpG', ignore_index=True)
-    
-    return model
+from utils.data_processing import prep_model
 
 
 def get_stats(dataset, meta):
