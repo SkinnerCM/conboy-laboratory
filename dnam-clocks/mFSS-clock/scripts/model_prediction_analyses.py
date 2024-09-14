@@ -317,7 +317,7 @@ def model_errs_and_dist(data, metadata, model, model_name, horvath_model=False):
     cutoffs = get_cutoffs(mu, std)
     model_fit = create_residual_distribution(residuals, mu, std, model_name)
     
-    model_stats = [(model_name,cutoffs[0], cutoffs[1], round(mu, 2))]
+    model_stats = [(model_name,cutoffs[0], cutoffs[1], round(mu, 1))]
     
     return model_stats, model_fit
 
