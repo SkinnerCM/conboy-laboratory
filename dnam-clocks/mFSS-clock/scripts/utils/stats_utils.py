@@ -17,19 +17,19 @@ def cohens_d(s1, s2):
     return diff/pooled_sd
 
 
-    def get_age_corrs(df, meta):
+def get_age_corrs(df, meta):
+
+corrs = []
+
+for cg in df.columns:
     
-    corrs = []
+    #regress a given predictor on age
+    regression = stats.linregress(meta.age.astype(float), df[cg])
+    slope, intercept, rvalue, pvalue, stderr = regression
     
-    for cg in df.columns:
-        
-        #regress a given predictor on age
-        regression = stats.linregress(meta.age.astype(float), df[cg])
-        slope, intercept, rvalue, pvalue, stderr = regression
-        
-        corrs+=[(cg, rvalue**2, stderr)]
-        
-    corrs = pd.DataFrame(corrs, columns=['CpG', 'R-squared', 'Stderr'])
-    corrs.sort_values('R-squared', inplace=True, ascending=False)
+    corrs+=[(cg, rvalue**2, stderr)]
     
-    return corrs
+corrs = pd.DataFrame(corrs, columns=['CpG', 'R-squared', 'Stderr'])
+corrs.sort_values('R-squared', inplace=True, ascending=False)
+
+return corrs
