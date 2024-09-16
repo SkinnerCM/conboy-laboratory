@@ -41,3 +41,19 @@ def list_reader(file,  encoding="utf8"):
     data = data[0]
 
     return data
+
+def cohens_d(s1, s2):
+    
+    import statistics
+    
+
+    diff = s2.mean()-s1.mean()
+    
+    n1 = len(s1)
+    n2 = len(s2)
+    sd1 = statistics.stdev(s1)
+    sd2 = statistics.stdev(s2)
+    
+    pooled_sd = np.sqrt(((n1-1)*sd1**2+(n2-1)*sd2**2)/(n1+n2-2))
+    
+    return diff/pooled_sd
