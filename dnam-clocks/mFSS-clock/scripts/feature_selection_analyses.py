@@ -1,3 +1,31 @@
+
+"""
+------------------------------------------------------------------------------
+ Author: Colin M. Skinner
+ Date Created: 2024-08-02
+ Last Modified: 2024-08-10
+ Description: A collection of functions for analyzing the feature selection
+              of methylation clocks. This script enables analysis of CpG site 
+              feature importance, correlation, heteroscedasticity, and group 
+              comparison statistics. The functions are designed for import into 
+              a Jupyter Notebook or other interactive environment.
+
+ Dependencies:  pandas, numpy, scipy, utils.data_processing (custom module)
+ Usage: Import `feature_selection_analyses.py` into a Jupyter Notebook or other
+        Python environment and call the desired functions for feature analysis.
+
+
+ Notes: - The script provides multiple analysis functions, including:
+        - `get_stats`: Computes regression statistics for CpG data.
+        - `get_tvals`: Calculates t-values to assess feature significance.
+        - `model_corrs`: Correlates model CpGs with reference data.
+        - `normalized_importance`: Calculates normalized feature importances.
+        - `het_r`: Measures noise correlation with age.
+        - `u_test`: Performs Mann-Whitney U test for two sample groups.
+        - No direct command-line execution is available; import and use functions as needed.
+ ------------------------------------------------------------------------------
+ """
+
 import pandas as pd 
 import numpy as np 
 from scipy import stats
