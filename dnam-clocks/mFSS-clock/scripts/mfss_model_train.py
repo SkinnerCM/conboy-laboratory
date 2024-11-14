@@ -1,3 +1,36 @@
+
+"""
+------------------------------------------------------------------------------
+ Author: Colin M. Skinner
+ Date Created: 2024-08-02
+ Last Modified: 2024-08-10
+ Description:   This script provides a set of functions to train and evaluate DNA methylation
+                clocks using the mFSS (modified Forward Stepwise Selection) algorithm.
+                Specifically, it includes functionality to fit a Linear Regression model to
+                predict age based on CpG site methylation data, perform stepwise feature
+                selection, and evaluate the model on validation and test datasets.
+
+ Dependencies:  - Python 3.8
+                - scikit-learn: For machine learning model and metrics
+                - SciPy: For statistical analysis (calculating correlation coefficients)
+                - pandas (assumed): For handling data in DataFrame format
+                - numpy : For handling data in array format
+
+ Usage:         Import `mfss_model_train.py` into a Jupyter Notebook or other
+                Python environment and call the desired functions to train a clock with the mFSS algorithm.
+
+
+ Notes:         - The `fit_and_evaluate_model` function trains a Linear Regression model, with
+                  the option to impose positive coefficients if desired.
+                - The `mf_stepwise` function applies a stepwise selection algorithm on a list
+                  of CpG sites, iteratively adding features to improve model performance on 
+                  validation data.
+                - The script assumes age as the target variable in the training labels.
+ ------------------------------------------------------------------------------
+ """
+
+
+
 from sklearn.linear_model import LinearRegression
 from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
