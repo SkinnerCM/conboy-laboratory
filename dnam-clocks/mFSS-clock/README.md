@@ -1,3 +1,5 @@
+[![Paper](https://github.com/SkinnerCM/conboy-laboratory/blob/main/dnam-clocks/mFSS-clock/figures/Figure%204.png)](https://www.biorxiv.org/content/10.1101/2024.10.09.617512v1)
+
 # This repository accompanies the paper "DNA methylation clocks struggle to distinguish inflammaging from healthy aging, but feature rectification improves coherence and enhances detection of inflammaging" by Colin M. Skinner, Michael J. Conboy and Irina M. Conboy.
 
 ## The repository contains links to the data used in the study as well as all code relevant to generating the figures and tables presented in the paper.
