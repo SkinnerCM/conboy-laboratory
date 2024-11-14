@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------------
  Author: Colin M. Skinner
  Date Created: 2024-08-02
- Last Modified: 2024-08-10
+ Last Modified: 2024-11-14
  Description:   This script provides a set of functions to train and evaluate DNA methylation
                 clocks using the mFSS (modified Forward Stepwise Selection) algorithm.
                 Specifically, it includes functionality to fit a Linear Regression model to
