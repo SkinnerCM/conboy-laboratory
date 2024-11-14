@@ -3,7 +3,7 @@
 [![Paper](https://img.shields.io/badge/bioRxiv-2024.10.09.617512v1-blue?style=plastic)](https://www.biorxiv.org/content/10.1101/2024.10.09.617512v1)
 [![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-yellow?style=plastic)](LICENSE)
 
-<img src="./figures/Figure%204.png" width="800">
+<img src="./figures/Figure%204.png" width="900">
 
 
 ## The repository contains links to the data used in the study as well as all code relevant to generating the figures and tables presented in the paper.
