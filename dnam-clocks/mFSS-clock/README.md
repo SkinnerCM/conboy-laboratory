@@ -1,17 +1,13 @@
 # This repository accompanies the paper "DNA methylation clocks struggle to distinguish inflammaging from healthy aging, but feature rectification improves coherence and enhances detection of inflammaging" by Colin M. Skinner, Michael J. Conboy and Irina M. Conboy.
 
 [![Paper](https://img.shields.io/badge/bioRxiv-2024.10.09.617512v1-blue?style=plastic)](https://www.biorxiv.org/content/10.1101/2024.10.09.617512v1)
+[![License: BSD 3-Clause](https://img.shields.io/badge/License-BSD%203--Clause-yellow?style=plastic)](LICENSE))
 
-<img src="./figures/Figure%204.png" width="700">
-
-
+<img src="./figures/Figure%204.png" width="800">
 
 
 ## The repository contains links to the data used in the study as well as all code relevant to generating the figures and tables presented in the paper.
 
-## License
-
-This project is licensed under BSD 3-Clause License. See the [LICENSE](LICENSE) file for details.
 
 ## Setting Up the Environment
 
