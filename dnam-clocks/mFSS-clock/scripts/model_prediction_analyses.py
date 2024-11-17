@@ -1,3 +1,38 @@
+
+"""
+------------------------------------------------------------------------------
+ Author: Colin M. Skinner
+ Date Created: 2024-08-02
+ Last Modified: 2024-11-17
+
+ Description:   This script provides utility functions for model performance 
+                analysis, specifically tailored for DNA methylation clocks. The functions 
+                include tools for generating predictions, calculating residuals, fitting normal 
+                distributions to residuals, and deriving statistical insights such as cutoffs 
+                and effect sizes (Cohen's d). These methods are designed to integrate with 
+                datasets and models used in aging research and similar fields.
+
+                The script assumes data inputs are structured with specific metadata columns, 
+                including age, and models with feature weights and CpG names.
+
+
+ Dependencies:  Python 3.8, pandas, numpy, scipy, utils.data_processing (custom module)
+ Usage:         Import `feature_selection_analyses.py` into a Jupyter Notebook or other
+                Python environment and call the desired functions for model prediction analysis.
+
+
+ Notes:         - The `prep_model` function from the custom module `utils.data_processing` is used 
+                  to preprocess model objects; ensure it is available and compatible.
+                - This script assumes that model objects include CpG names and corresponding weights. 
+                  Any mismatch between model features and input data will raise errors.
+                - The functions are tailored for datasets in aging research, but they can be adapted 
+                  for other domains requiring similar feature and residual analyses.
+                - Adjustments may be required for models or datasets with different conventions.
+ ------------------------------------------------------------------------------
+ """
+
+
+
 import pandas as pd 
 import numpy as np 
 from scipy import stats
