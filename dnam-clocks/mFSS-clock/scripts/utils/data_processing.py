@@ -1,3 +1,44 @@
+"""
+------------------------------------------------------------------------------
+ Author: Colin M. Skinner
+ Date Created: 2024-08-02
+ Last Modified: 2024-11-17
+
+ Description:   This module provides utility functions for data processing and analysis,
+                including model preprocessing, file operations, and statistical calculations.
+                It is primarily designed for use in aging research but can be adapted for
+                other domains. The functions ensure compatibility between input data
+                and models, handle file reading/writing, and compute effect sizes.
+
+                
+ Dependencies:  - Python 3.8
+                - pandas (for data manipulation)
+                - csv (for file input/output)
+                - statistics (for computing effect sizes)
+                    
+
+ Usage:         Import `data_processing.py` into a Jupyter Notebook or Python environment.
+                Use the following functions as needed:
+                - `prep_model`: Prepares a model DataFrame for feature-based predictions.
+                - `list_writer`: Writes a list to a CSV file.
+                - `list_reader`: Reads a list from a CSV file.
+                - `cohens_d`: Computes Cohen's d for effect size estimation.
+
+
+ Notes:         - `prep_model` assumes the input DataFrame includes columns with CpG names 
+                  and weights. It renames, sorts, and prepares the model for use in prediction tasks.
+                - The `list_writer` and `list_reader` functions are designed for lightweight CSV 
+                  file operations and assume a single-row list structure.
+                - The `cohens_d` function calculates effect size between two groups and is 
+                  particularly useful for statistical comparisons in experimental studies.
+                - While the script is tailored to aging research, the functions are modular 
+                  and can be adapted for broader use cases with minimal modifications.
+                - Ensure input data conforms to the expected structure for seamless integration.
+ ------------------------------------------------------------------------------
+ """
+
+
+
 import pandas
 import csv
 
