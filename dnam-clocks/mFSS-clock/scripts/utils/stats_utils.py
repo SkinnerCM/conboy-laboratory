@@ -1,3 +1,36 @@
+"""
+---------------------------------------------------------------------------------------------
+ Author: Colin M. Skinner
+ Date Created: 2024-08-02
+ Last Modified: 2024-11-17
+
+ Description:   This module provides statistical analysis functions tailored for research 
+                involving biological data. It includes utilities for calculating effect 
+                sizes (Cohen's d) and assessing correlations between features (e.g., CpG 
+                sites) and metadata such as age   
+                
+ Dependencies:  - Python 3.8
+                - pandas (for data manipulation)
+                - numpy (for numerical computations)
+                - statistics (for computing standard deviations and other metrics)
+                - scipy.stats (for linear regression calculations)                  
+
+ Usage:         Import `statistics_analysis.py` into a Jupyter Notebook or Python environment.
+                Use the following functions as needed:
+                - `cohens_d`: Computes Cohen's d for effect size estimation between two groups.
+                - `get_age_corrs`: Calculates R-squared correlations and standard errors between
+                   features and a specified metadata field (e.g., age).
+
+ Notes:         - `cohens_d` assumes input data as numeric lists, arrays, or pandas Series.
+                - `get_age_corrs` requires a DataFrame of features (e.g., CpG sites) and a 
+                  metadata DataFrame with an 'age' column.
+                - Ensure input data is cleaned and formatted correctly to avoid runtime errors.
+                - Correlation results are sorted by R-squared values in descending order for
+                  easy interpretation.
+ --------------------------------------------------------------------------------------------
+ """
+
+
 import statistics
 import pandas as pd
 import numpy as np
