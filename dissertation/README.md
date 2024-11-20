@@ -18,7 +18,7 @@ Welcome to the repository for my dissertation, **"Hypothesis-driven training for
     	- seaborn==0.12.2
     	- jupyterlab==3.6.1
     	- ipykernel==6.20.2
-	- notebook==6.5.2
+        - notebook==6.5.2
 
 ### 2. **Figures**
    - **`figures/`**: Contains all the figures used in the dissertation, including:
