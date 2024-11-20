@@ -39,8 +39,8 @@ Welcome to the repository for my dissertation, **"Hypothesis-driven training for
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/your-username/dissertation-repo.git
-   cd dissertation-repo
+   git clone https://github.com/SkinnerCM/conboy-laboratory.git
+   cd dissertation
 2. **Install dependencies**:
    ```bash
    pip install -r requirements.txt
