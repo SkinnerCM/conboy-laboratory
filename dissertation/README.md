@@ -1,0 +1,46 @@
+# Dissertation Repository: Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging
+
+Welcome to the repository for my dissertation, **"Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for
+Linear Model Coherence to Detect Inflammaging"**, submitted in partial fulfillment of the requirements for the Joint Doctor of Philosophy with University of California, San Francisco in Bioengineering and the Designated Emphasis in Computational and Genomic Biology in the Graduate Division of the University of California, Berkeley. This repository contains all the code, figures, and Jupyter notebooks used to generate the results and figures presented in the dissertation.
+
+## Repository Contents
+
+### 1. **Code**
+   - **`src/`**: Python scripts and utility functions used for data processing, analysis, and model training.
+     - Example: `feature_selection.py` - functions for analyzing CpG feature importance in DNA methylation clocks.
+   - **Dependencies**:
+       - python=3.8.16
+       - pip:
+    	- numpy==1.24.4
+    	- pandas==1.5.3
+    	- scipy==1.10.0
+    	- scikit-learn==1.2.0
+    	- matplotlib==3.6.3
+    	- seaborn==0.12.2
+    	- jupyterlab==3.6.1
+    	- ipykernel==6.20.2
+	- notebook==6.5.2
+
+### 2. **Figures**
+   - **`figures/`**: Contains all the figures used in the dissertation, including:
+     - High-resolution images for publication.
+     - Supplementary and exploratory visualizations.
+     - Subdirectories grouped by chapter, e.g., `chapter1/`, `chapter2/`.
+
+### 3. **Notebooks**
+   - **`notebooks/`**: Jupyter notebooks for data preprocessing, analysis, and figure generation.
+     - Example notebooks:
+       - `Chapter1.ipynb`: Analysis of the biological relevance of CpG sites across DNA methylation clocks and exploration of prediction variances in biological age estimation.
+
+### 4. **Data**
+   - **`data/`**: Processed datasets used for analysis. 
+   - Instructions for accessing raw data can be found in `data/README.md`.
+
+## How to Use This Repository
+
+1. **Clone the repository**:
+   ```bash
+   git clone https://github.com/your-username/dissertation-repo.git
+   cd dissertation-repo
+2. **Install dependencies:**
+
