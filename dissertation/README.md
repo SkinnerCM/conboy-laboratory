@@ -1,7 +1,6 @@
 # Dissertation Repository: Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging
 
-Welcome to the repository for my dissertation, **"Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for
-Linear Model Coherence to Detect Inflammaging"**, submitted in partial fulfillment of the requirements for the Joint Doctor of Philosophy with University of California, San Francisco in Bioengineering and the Designated Emphasis in Computational and Genomic Biology in the Graduate Division of the University of California, Berkeley. This repository contains all the code, figures, and Jupyter notebooks used to generate the results and figures presented in the dissertation.
+Welcome to the repository for my dissertation, **"Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging"**, submitted in partial fulfillment of the requirements for the Joint Doctor of Philosophy with University of California, San Francisco in Bioengineering and the Designated Emphasis in Computational and Genomic Biology in the Graduate Division of the University of California, Berkeley. This repository contains all the code, figures, and Jupyter notebooks used to generate the results and figures presented in the dissertation.
 
 ## Repository Contents
 
@@ -42,5 +41,23 @@ Linear Model Coherence to Detect Inflammaging"**, submitted in partial fulfillme
    ```bash
    git clone https://github.com/your-username/dissertation-repo.git
    cd dissertation-repo
-2. **Install dependencies:**
+2. **Install dependencies**:
+   ```bash
+   pip install -r requirements.txt
+3. **Run analyses**:
+   - Navigate to the relevant notebook in the notebooks/ directory or use the command line to execute scripts from the src/ directory.
+4. **Reproduce figures**:
+   Open the corresponding notebook in the notebooks/ directory or run the scripts listed in the src/ directory.
 
+## License
+
+© Colin M. Skinner, 2024. All rights reserved.
+
+This work is the intellectual property of Colin M. Skinner. Redistribution, modification, or commercial use is prohibited without explicit permission.
+
+For inquiries about permissions or collaboration, please contact skinner.colinm@gmail.com.
+
+## Citation
+If you use this repository in your work, please cite:
+
+Colin M. Skinner. "Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging." Ph.D. Dissertation, University of California, Berkeley, 2025. (<DOI or link>)
