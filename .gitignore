@@ -5,3 +5,5 @@ dnam-clocks/mFSS-clock/data/processed/metadata/450K_manifest.csv
 dissertation/data/processed/metadata/450K_manifest.csv
 
 dnam-clocks/mFSS-clock/data/processed/GSE42861_arthritis/arthritis32_full.npy
+dnam-clocks/mFSS-clock/data/processed/GSE40279_hannum/hannum32.pkl
+
