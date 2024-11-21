@@ -1,5 +1,3 @@
-Pickled with Python 3.8
-
 GSE72774
 
 Status	Public on Sep 04, 2018
@@ -17,3 +15,6 @@ Horvath S, Ritz BR. Increased epigenetic age and granulocyte counts in the blood
 Chuang YH, Paul KC, Bronstein JM, Bordelon Y et al. Parkinson's disease is associated with DNA methylation levels in human blood and saliva. Genome Med 2017 Aug 30;9(1):76. PMID: 28851441
 Paul KC, Binder AM, Horvath S, Kusters C et al. Accelerated hematopoietic mitotic aging measured by DNA methylation, blood cell lineage, and Parkinson's disease. BMC Genomics 2021 Sep 26;22(1):696. PMID: 34565328
 Paul KC, Kusters C, Furlong M, Zhang K et al. Immune system disruptions implicated in whole blood epigenome-wide association study of depression among Parkinson's disease patients. Bra
+
+***Notes***
+Pickled with Python 3.8
