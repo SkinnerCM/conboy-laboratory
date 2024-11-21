@@ -3,3 +3,5 @@ __pycache__/
 
 dnam-clocks/mFSS-clock/data/processed/metadata/450K_manifest.csv
 dissertation/data/processed/metadata/450K_manifest.csv
+
+dnam-clocks/mFSS-clock/data/processed/GSE42861_arthritis/arthritis32_full.npy
