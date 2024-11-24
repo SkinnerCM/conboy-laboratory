@@ -37,7 +37,7 @@ from sklearn.metrics import mean_squared_error
 from sklearn.model_selection import train_test_split
 from scipy import stats
 
-def fit_and_evaluate_model(x_train, y_train, x_val, y_val, x_test, test_labels, flag=False):
+def fit_and_evaluate_model(x_train, y_train, x_val, y_val, x_test, test_labels, pos_weights=False):
     """
     Fit a Linear Regression model and evaluate performance on validation and test sets.
 
@@ -48,7 +48,7 @@ def fit_and_evaluate_model(x_train, y_train, x_val, y_val, x_test, test_labels, 
     - y_val: Validation labels
     - x_test: Test features
     - test_labels: Test labels
-    - flag: Whether to use positive constraints in Linear Regression
+    - pos_weights: Whether to use positive constraints in Linear Regression
 
     Returns:
     - val_mse: Mean squared error on validation set
@@ -56,7 +56,7 @@ def fit_and_evaluate_model(x_train, y_train, x_val, y_val, x_test, test_labels, 
     - val_r_val: Correlation coefficient on validation set
     - test_r_val: Correlation coefficient on test set
     """
-    regr = LinearRegression(positive=flag, n_jobs=-1).fit(x_train, y_train)
+    regr = LinearRegression(positive=pos_weights, n_jobs=-1).fit(x_train, y_train)
     val_preds = regr.predict(x_val)
     test_preds = regr.predict(x_test)
 
@@ -150,7 +150,7 @@ def get_age_corrs(df, meta):
 
 
 
-def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, flag=False):
+def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, pos_weights=False):
     """
     Perform stepwise model selection.
 
@@ -161,7 +161,7 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, flag=Fa
     - test: Test data
     - test_labels: Labels for test data
     - threshold: Number of unsuccessful iterations before stopping
-    - flag: Whether to use positive constraints in Linear Regression
+    - pos_weights: Whether to use positive constraints in Linear Regression
 
     Returns:
     - model_cgs: List of selected CpG sites
@@ -194,7 +194,7 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, flag=Fa
         
         # Fit and evaluate model
         curr_val_mse, curr_test_mse, curr_val_r_val, curr_test_r_val = fit_and_evaluate_model(
-            x_train, y_train, x_val, y_val, test[model_cgs], test_labels.age, flag
+            x_train, y_train, x_val, y_val, test[model_cgs], test_labels.age, pos_weights
         )
         
         # Store performance metrics
