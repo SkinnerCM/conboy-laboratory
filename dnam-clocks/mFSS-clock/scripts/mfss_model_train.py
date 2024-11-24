@@ -22,7 +22,7 @@
 
  Notes:         - The `fit_and_evaluate_model` function trains a Linear Regression model, with
                   the option to impose positive coefficients if desired.
-                - The `mf_stepwise` function applies a stepwise selection algorithm on a list
+                - The `mfss_ols` function applies the modified forward stepwise selection algorithm on a list
                   of CpG sites, iteratively adding features to improve model performance on 
                   validation data.
                 - The script assumes age as the target variable in the training labels.
@@ -150,7 +150,7 @@ def get_age_corrs(df, meta):
 
 
 
-def mf_stepwise(cg_list, train, train_labels, test, test_labels, threshold, flag=False):
+def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, flag=False):
     """
     Perform stepwise model selection.
 
