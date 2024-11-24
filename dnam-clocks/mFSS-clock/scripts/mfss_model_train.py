@@ -3,7 +3,7 @@
 ------------------------------------------------------------------------------
  Author: Colin M. Skinner
  Date Created: 2024-08-02
- Last Modified: 2024-11-14
+ Last Modified: 2024-11-23
  Description:   This script provides a set of functions to train and evaluate DNA methylation
                 clocks using the mFSS (modified Forward Stepwise Selection) algorithm.
                 Specifically, it includes functionality to fit a Linear Regression model to
@@ -83,6 +83,71 @@ def compute_r_value(preds, actuals):
     if len(set(preds)) < 2 or len(set(actuals)) < 2:
         return 0
     return stats.linregress(preds, actuals).rvalue
+
+
+def get_age_corrs(df, meta):
+    
+    """
+    Calculate the R-squared values and standard errors of CpG methylation levels
+    with respect to age using linear regression.
+
+    Parameters
+    ----------
+    df : pandas.DataFrame
+        A DataFrame containing methylation levels where rows are samples 
+        and columns are CpG sites.
+    meta : pandas.DataFrame
+        A metadata DataFrame that includes an 'age' column corresponding 
+        to the age of each sample in `df`.
+
+    Returns
+    -------
+    pandas.DataFrame
+        A DataFrame containing the CpG site names, R-squared values, and 
+        standard errors, sorted in descending order of R-squared values.
+
+    Notes
+    -----
+    - Each CpG site's methylation values are regressed on age using simple 
+      linear regression.
+    - The R-squared value indicates the proportion of variance in methylation 
+      explained by age.
+    - The standard error reflects the precision of the slope estimate for each 
+      CpG site.
+    - Sorting by R-squared highlights CpG sites most strongly correlated 
+      with age.
+
+    Example
+    -------
+    >>> import pandas as pd
+    >>> from scipy import stats
+    >>> methylation_data = pd.DataFrame({
+    ...     'cg1': [0.5, 0.6, 0.55],
+    ...     'cg2': [0.7, 0.8, 0.75]
+    ... })
+    >>> metadata = pd.DataFrame({'age': [25, 30, 35]})
+    >>> get_age_corrs(methylation_data, metadata)
+            CpG  R-squared    Stderr
+    0      cg2   0.900000  0.028868
+    1      cg1   0.800000  0.028868
+    """
+    
+    corrs = []
+    
+    for cg in df.columns:
+        
+        #regress a given predictor on age
+        regression = stats.linregress(meta.age.astype(float), df[cg])
+        slope, intercept, rvalue, pvalue, stderr = regression
+        
+        corrs+=[(cg, rvalue**2, stderr)]
+        
+    corrs = pd.DataFrame(corrs, columns=['CpG', 'R-squared', 'Stderr'])
+    corrs.sort_values('R-squared', inplace=True, ascending=False)
+    
+    return corrs
+
+
 
 def mf_stepwise(cg_list, train, train_labels, test, test_labels, threshold, flag=False):
     """
