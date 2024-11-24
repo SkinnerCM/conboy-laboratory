@@ -11,7 +11,7 @@ dnam-clocks/mFSS-clock/data/processed/GSE125105_depression/depression32_full.npy
 dnam-clocks/mFSS-clock/data/processed/Combined/v7_disease.npy
 dnam-clocks/mFSS-clock/data/processed/Combined/v7_healthy.npy
 
-dnam-clocks/mFSS-clock/data/processed/GSE55763_lehne/lehne_reduced.pkl
+dnam-clocks/mFSS-clock/data/processed/GSE55763_lehne/lehne32_reduced.npy
 dnam-clocks/mFSS-clock/data/processed/GSE72774_parkinsons/parkinsons32.pkl
 dnam-clocks/mFSS-clock/data/processed/GSE106648_ms/MS32.pkl
 
