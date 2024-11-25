@@ -1,10 +1,15 @@
 
 """
-------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------
  Author: Colin M. Skinner
  Date Created: 2024-08-02
  Last Modified: 2024-11-25
- Description:   
+
+ Description:   This script analyzes DNA methylation data to assess shifts in CpG site methylation 
+ 				patterns between healthy and diseased states. It calculates coherence measures 
+ 				based on the relationship between CpG shifts and model weights, offering insights 
+				into biological relevance and consistency across conditions. The script includes 
+ 				functions for regression analysis, distance computation, and data transformation.
 
  Dependencies:  - Python 3.8
                 - scikit-learn: For machine learning model and metrics
@@ -12,11 +17,26 @@
                 - pandas (assumed): For handling data in DataFrame format
                 - numpy : For handling data in array format
 
- Usage:         
+ Usage:        The script assumes pre-processed methylation data and metadata, structured 
+ 			   to facilitate regression analyses and coherence computation. Example usage 
+    		   would involve calling `get_shifts()` or `get_coherence()` with appropriate 
+               inputs derived from experimental datasets   
 
- Notes:         
- ------------------------------------------------------------------------------
+ Notes:        - Ensure metadata and dataset align in terms of indices and dimensions.
+    		   - Results are sensitive to data quality; preprocessing and validation are 
+     		     crucial for meaningful outcomes.
+    		   - This script is designed for research purposes and is not optimized for 
+    			 high-performance computing.
+ ---------------------------------------------------------------------------------------------------
 """
+
+import pandas as pd
+import numpy as np
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+from sklearn.model_selection import train_test_split
+from scipy import stats
+
 
 def get_line(params):
     
