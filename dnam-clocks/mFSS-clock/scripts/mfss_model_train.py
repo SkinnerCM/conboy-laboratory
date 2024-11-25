@@ -214,3 +214,122 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, pos_wei
         iteration += 1
         
     return model_cgs, best_iter, val_mse, val_r_val, test_mse, test_r_val
+
+
+
+    def fig3_plots(df,df_meta, basic_fsw_selection, d_condition, flag=False):
+    
+    if flag:
+        hue_val = df_meta.simple_disease_state
+    else:
+        hue_val = df_meta.disease_state
+
+    preds = basic_fsw_model.predict(df[basic_fsw_selection])
+    df_meta['basic_fsw preds'] = preds
+
+    regression = stats.linregress(df_meta.age, preds)
+    slope, intercept, rvalue, pvalue, stderr = regression
+
+    mae = metrics.mean_absolute_error(df_meta.age, preds)
+
+
+    conditions = ['Control', d_condition]
+    # Define the desired order of categories
+    category_order = [conditions[0], conditions[1]]
+
+    blue = sns.color_palette()[0]
+    red=sns.color_palette()[3]
+
+    custom_palette = {conditions[0]:blue, conditions[1]:red}
+
+    # Create a scatter plot of the transformed data
+    plt.figure(figsize=(10, 8)) 
+    
+    sns.scatterplot(x=df_meta.age, y=preds, hue = hue_val, 
+                    palette=custom_palette, hue_order=category_order,
+                    alpha=0.75, s=150, edgecolor="k")
+    
+    vals = np.linspace(1,100,100)
+    sns.lineplot(x=vals, y=vals,linewidth=3, color='k',linestyle='--')
+    plt.xlabel('Actual age (yrs)',fontsize=30)
+    plt.ylabel('Predicted',fontsize=30)
+
+    plt.xticks(fontsize=24)
+    plt.yticks(fontsize=24)
+    plt.legend(loc='best', fontsize='xx-large')
+
+    plt.title('{}: r={:.2f}, p={:.1g}, MAE={:.1f} yrs'.format(df_meta.series_id[0], rvalue, pvalue, mae),fontsize=20)
+        
+    plt.savefig(f'FSWclock/Figure 3/{d_condition} scatterplot for basic mFSS.png',dpi=300)
+
+    
+    #create kdeplot
+    df_meta['Residuals'] = df_meta['basic_fsw preds'] - df_meta.age
+    
+    from scipy.stats import ttest_ind
+    h_resids = df_meta[hue_val=='Control'].Residuals
+    d_resids = df_meta[hue_val!='Control'].Residuals
+    # Perform the Welch's t-test (indfendent t-test with unequal variances)
+    statistic, p_value = ttest_ind(h_resids, d_resids, equal_var=False)
+    effect_size =  cohens_d(h_resids, d_resids)
+
+    plt.figure(figsize=(10, 8)) 
+
+
+    sns.histplot(
+            data=df_meta,
+            x='Residuals',
+            hue=hue_val,
+            palette=custom_palette,
+            bins=20,
+            kde=True,
+            alpha=0.4,
+            element="step",
+            legend=False,
+            stat = 'density',
+            common_norm=False,
+            line_kws={'linewidth': 4}
+            )
+    plt.xlabel('Residual (yrs)', fontsize=28)
+    plt.xticks(fontsize=24)
+    plt.ylabel('Density', fontsize=28)
+    plt.yticks(fontsize=24)
+
+    # Plot means for each cohort (healthy status)
+    mean_healthy = h_resids.mean()
+    mean_unhealthy = d_resids.mean()
+
+    plt.axvline(x=mean_healthy, color=blue, linestyle='--', linewidth=3, 
+               ymin=0.01, ymax=0.95, dashes=(4.5, 4.28), zorder=6)
+    plt.axvline(x=mean_healthy, color='k', linestyle='--', linewidth=5, ymax=0.95)
+
+    plt.axvline(x=mean_unhealthy, color=red, linestyle='--', linewidth=3, 
+                 ymin=0.01, ymax=0.95, dashes=(4.5, 4.28), zorder=6)
+    plt.axvline(x=mean_unhealthy, color='k', linestyle='--', linewidth=5, ymax=0.95)
+
+    plt.text(0.65, 0.95, f"d={effect_size:.2f}", fontsize=26, verticalalignment='top', 
+         horizontalalignment='left', transform=plt.gca().transAxes);
+    plt.text(0.65, 0.85, f"p={p_value:.1e}", fontsize=26,  verticalalignment='top', 
+         horizontalalignment='left', transform=plt.gca().transAxes);
+    
+
+
+    #Create boxplot
+    plt.figure(figsize=(10, 8)) 
+    
+    sns.boxplot(data=df_meta, x=hue_val, y='Residuals', palette=custom_palette, order=category_order,linewidth=3)
+    # Add significance bar and p-value
+
+    max_val = max(max(h_resids),max(d_resids))
+    min_val = min(min(h_resids),min(d_resids))
+
+    plt.plot([0, 1], [max_val+2, max_val+2], 'k-', lw=2)
+    plt.text(0.5, max_val+3, f'd = {effect_size:.2g} \n p = {p_value:.2g}', ha='center', fontsize=20)
+
+    plt.xticks(fontsize=24)
+    plt.yticks(fontsize=24)
+    plt.ylim([min_val-5, max_val+15])
+
+    plt.xlabel(None)
+    plt.ylabel('Residuals (yrs)',fontsize=30)
+    
