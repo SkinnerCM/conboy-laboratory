@@ -224,6 +224,45 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, pos_wei
 
 def fig3_plots(df,df_meta, model, model_selection, d_condition, flag=False):
     
+    """
+    Generates a series of plots for a machine learning model's predictions 
+    against actual values, including scatter plots, residual distributions, 
+    and boxplots, while calculating statistical significance and effect sizes.
+
+    Parameters:
+    -----------
+    df : pandas.DataFrame
+        Input data containing features used by the model.
+    df_meta : pandas.DataFrame
+        Metadata associated with the dataset, including age and health condition.
+    model : object
+        A machine learning model that implements a `predict` method for inference.
+    model_selection : list
+        A list of feature names used for predictions by the model.
+    d_condition : str
+        Name of the disease condition for comparison against a control group.
+    flag : bool, optional
+        If `True`, uses `simple_disease_state` for coloring in the plots; 
+        otherwise, uses `disease_state`. Default is `False`.
+
+    Outputs:
+    --------
+    - Scatter plot of actual age vs. predicted age, with linear regression stats.
+    - KDE plot of residuals, annotated with effect size and p-value.
+    - Boxplot of residuals by health condition, annotated with significance stats.
+
+    Calculations:
+    -------------
+    - Computes regression statistics for predicted vs. actual age.
+    - Calculates residuals (predicted - actual) for each sample.
+    - Performs Welch's t-test and computes Cohen's d effect size between groups.
+
+    Notes:
+    ------
+    - Residuals are plotted for both control and disease conditions.
+    - Visuals use customized color palettes and ordering of categories.
+    """
+    
     if flag:
         hue_val = df_meta.simple_disease_state
     else:
