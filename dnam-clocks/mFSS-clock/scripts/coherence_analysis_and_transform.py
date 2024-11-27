@@ -97,24 +97,14 @@ def get_shifts(data, meta, cg_set, healthy_tag):
         
         d = conditioned_cohens(h_line, d_line, h_stderr, d_stderr)
 
+        avg_dist = calculate_distance(d_line,h_line)
 
-        if h_slope > 0:
-            
-            avg_dist = calculate_distance(d_line,h_line)
-            
 
-            if avg_dist>0:
-                up_shift+=[(cg, avg_dist, h_rvalue, d, 1,i)]            
-            else:
-                down_shift+=[(cg, avg_dist, h_rvalue, d, -1,i)]
+        if avg_dist>0:
+            up_shift+=[(cg, avg_dist, h_rvalue, d, 1,i)]            
         else:
-            
-            avg_dist = calculate_distance(d_line,h_line)
-            if avg_dist>0:
-                up_shift+=[(cg, avg_dist, h_rvalue, d, 1,i)]
-            else:
-                down_shift+=[(cg, avg_dist,h_rvalue, d, -1,i)]
-                
+            down_shift+=[(cg, avg_dist, h_rvalue, d, -1,i)]
+      
     up_shift = pd.DataFrame(up_shift, columns=['CpG', 'Shift', 'Correlation','Cohens d','Sign','Order'])
     up_shift.reset_index(inplace=True,drop=True)
 #     up_shift = up_shift.sort_values(by='Shift', ascending=False, ignore_index=True)
