@@ -1,9 +1,11 @@
-
 """
-------------------------------------------------------------------------------
+--------------------------------------------------------------------------------------------------------------
+ File Name: mfss_model_train.py
  Author: Colin M. Skinner
  Date Created: 2024-08-02
- Last Modified: 2024-11-24
+ Last Modified: 2024-11-26
+ 
+
  Description:   This script provides a set of functions to train and evaluate DNA methylation
                 clocks using the mFSS (modified Forward Stepwise Selection) algorithm.
                 Specifically, it includes functionality to fit a Linear Regression model to
@@ -26,7 +28,7 @@
                   of CpG sites, iteratively adding features to improve model performance on 
                   validation data.
                 - The script assumes age as the target variable in the training labels.
- ------------------------------------------------------------------------------
+ -------------------------------------------------------------------------------------------------------------
  """
 
 
@@ -219,160 +221,3 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, pos_wei
         iteration += 1
         
     return model_cgs, best_iter, val_mse, val_r_val, test_mse, test_r_val
-
-
-
-def fig3_plots(df,df_meta, model, model_selection, d_condition, flag=False):
-    
-    """
-    Generates a series of plots for a machine learning model's predictions 
-    against actual values, including scatter plots, residual distributions, 
-    and boxplots, while calculating statistical significance and effect sizes.
-
-    Parameters:
-    -----------
-    df : pandas.DataFrame
-        Input data containing features used by the model.
-    df_meta : pandas.DataFrame
-        Metadata associated with the dataset, including age and health condition.
-    model : object
-        A machine learning model that implements a `predict` method for inference.
-    model_selection : list
-        A list of feature names used for predictions by the model.
-    d_condition : str
-        Name of the disease condition for comparison against a control group.
-    flag : bool, optional
-        If `True`, uses `simple_disease_state` for coloring in the plots; 
-        otherwise, uses `disease_state`. Default is `False`.
-
-    Outputs:
-    --------
-    - Scatter plot of actual age vs. predicted age, with linear regression stats.
-    - KDE plot of residuals, annotated with effect size and p-value.
-    - Boxplot of residuals by health condition, annotated with significance stats.
-
-    Calculations:
-    -------------
-    - Computes regression statistics for predicted vs. actual age.
-    - Calculates residuals (predicted - actual) for each sample.
-    - Performs Welch's t-test and computes Cohen's d effect size between groups.
-
-    Notes:
-    ------
-    - Residuals are plotted for both control and disease conditions.
-    - Visuals use customized color palettes and ordering of categories.
-    """
-    
-    if flag:
-        hue_val = df_meta.simple_disease_state
-    else:
-        hue_val = df_meta.disease_state
-
-    preds = model.predict(df[model_selection])
-    df_meta['model preds'] = preds
-
-    regression = stats.linregress(df_meta.age, preds)
-    slope, intercept, rvalue, pvalue, stderr = regression
-
-    mae = metrics.mean_absolute_error(df_meta.age, preds)
-
-
-    conditions = ['Control', d_condition]
-    # Define the desired order of categories
-    category_order = [conditions[0], conditions[1]]
-
-    blue = sns.color_palette()[0]
-    red=sns.color_palette()[3]
-
-    custom_palette = {conditions[0]:blue, conditions[1]:red}
-
-    # Create a scatter plot of the transformed data
-    plt.figure(figsize=(10, 8)) 
-    
-    sns.scatterplot(x=df_meta.age, y=preds, hue = hue_val, 
-                    palette=custom_palette, hue_order=category_order,
-                    alpha=0.75, s=150, edgecolor="k")
-    
-    vals = np.linspace(1,100,100)
-    sns.lineplot(x=vals, y=vals,linewidth=3, color='k',linestyle='--')
-    plt.xlabel('Actual age (yrs)',fontsize=30)
-    plt.ylabel('Predicted',fontsize=30)
-
-    plt.xticks(fontsize=24)
-    plt.yticks(fontsize=24)
-    plt.legend(loc='best', fontsize='xx-large')
-
-    plt.title('{}: r={:.2f}, p={:.1g}, MAE={:.1f} yrs'.format(df_meta.series_id[0], rvalue, pvalue, mae),fontsize=20)
-        
-    
-
-    
-    #create kdeplot
-    df_meta['Residuals'] = df_meta['model preds'] - df_meta.age
-    
-    from scipy.stats import ttest_ind
-    h_resids = df_meta[hue_val=='Control'].Residuals
-    d_resids = df_meta[hue_val!='Control'].Residuals
-    # Perform the Welch's t-test (indfendent t-test with unequal variances)
-    statistic, p_value = ttest_ind(h_resids, d_resids, equal_var=False)
-    effect_size =  cohens_d(h_resids, d_resids)
-
-    plt.figure(figsize=(10, 8)) 
-
-
-    sns.histplot(
-            data=df_meta,
-            x='Residuals',
-            hue=hue_val,
-            palette=custom_palette,
-            bins=20,
-            kde=True,
-            alpha=0.4,
-            element="step",
-            legend=False,
-            stat = 'density',
-            common_norm=False,
-            line_kws={'linewidth': 4}
-            )
-    plt.xlabel('Residual (yrs)', fontsize=28)
-    plt.xticks(fontsize=24)
-    plt.ylabel('Density', fontsize=28)
-    plt.yticks(fontsize=24)
-
-    # Plot means for each cohort (healthy status)
-    mean_healthy = h_resids.mean()
-    mean_unhealthy = d_resids.mean()
-
-    plt.axvline(x=mean_healthy, color=blue, linestyle='--', linewidth=3, 
-               ymin=0.01, ymax=0.95, dashes=(4.5, 4.28), zorder=6)
-    plt.axvline(x=mean_healthy, color='k', linestyle='--', linewidth=5, ymax=0.95)
-
-    plt.axvline(x=mean_unhealthy, color=red, linestyle='--', linewidth=3, 
-                 ymin=0.01, ymax=0.95, dashes=(4.5, 4.28), zorder=6)
-    plt.axvline(x=mean_unhealthy, color='k', linestyle='--', linewidth=5, ymax=0.95)
-
-    plt.text(0.65, 0.95, f"d={effect_size:.2f}", fontsize=26, verticalalignment='top', 
-         horizontalalignment='left', transform=plt.gca().transAxes);
-    plt.text(0.65, 0.85, f"p={p_value:.1e}", fontsize=26,  verticalalignment='top', 
-         horizontalalignment='left', transform=plt.gca().transAxes);
-    
-
-
-    #Create boxplot
-    plt.figure(figsize=(10, 8)) 
-    
-    sns.boxplot(data=df_meta, x=hue_val, y='Residuals', palette=custom_palette, order=category_order,linewidth=3)
-    # Add significance bar and p-value
-
-    max_val = max(max(h_resids),max(d_resids))
-    min_val = min(min(h_resids),min(d_resids))
-
-    plt.plot([0, 1], [max_val+2, max_val+2], 'k-', lw=2)
-    plt.text(0.5, max_val+3, f'd = {effect_size:.2g} \n p = {p_value:.2g}', ha='center', fontsize=20)
-
-    plt.xticks(fontsize=24)
-    plt.yticks(fontsize=24)
-    plt.ylim([min_val-5, max_val+15])
-
-    plt.xlabel(None)
-    plt.ylabel('Residuals (yrs)',fontsize=30)
