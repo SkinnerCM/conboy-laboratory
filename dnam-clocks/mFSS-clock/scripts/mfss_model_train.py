@@ -3,7 +3,7 @@
  File Name: mfss_model_train.py
  Author: Colin M. Skinner
  Date Created: 2024-08-02
- Last Modified: 2024-11-26
+ Last Modified: 2024-11-29
  
 
  Description:   This script provides a set of functions to train and evaluate DNA methylation
@@ -157,7 +157,7 @@ def get_age_corrs(df, meta):
 
 
 
-def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, rand_state=42, pos_weights=False):
+def mfss_ols(cg_list, train, train_labels, test, test_labels, patience=100, rand_state=42, pos_weights=False):
     """
     Perform stepwise model selection.
 
@@ -178,7 +178,7 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, rand_st
     - test_mse: List of test mean squared errors
     - test_r_val: List of test r-values
     """
-    countdown = threshold
+    countdown = patience
     iteration = 0
     best_mse = float('inf')
     model_cgs = []
@@ -197,7 +197,7 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, rand_st
 
         # Split the dataset
         x_train, x_val, y_train, y_val = train_test_split(temp_data, train_labels.age,
-                                                          test_size=0.15, random_state=rnd_state)
+                                                          test_size=0.15, random_state=rand_state)
         
         # Fit and evaluate model
         curr_val_mse, curr_test_mse, curr_val_r_val, curr_test_r_val = fit_and_evaluate_model(
@@ -214,7 +214,7 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, rand_st
         if curr_test_mse < best_mse:
             best_mse = curr_test_mse
             best_iter = iteration
-            countdown = threshold
+            countdown = patience
         else:
             countdown -= 1
         
