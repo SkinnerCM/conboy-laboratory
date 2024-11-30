@@ -157,7 +157,7 @@ def get_age_corrs(df, meta):
 
 
 
-def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, pos_weights=False):
+def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, rand_state=42, pos_weights=False):
     """
     Perform stepwise model selection.
 
@@ -189,7 +189,7 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, pos_wei
     test_r_val = []
 
     while countdown > 0 and iteration < len(cg_list):
-        print(f'Iteration: {iteration}')
+#         print(f'Iteration: {iteration}')
         
         # Update model with the next CpG site
         model_cgs.append(cg_list[iteration])
@@ -197,7 +197,7 @@ def mfss_ols(cg_list, train, train_labels, test, test_labels, threshold, pos_wei
 
         # Split the dataset
         x_train, x_val, y_train, y_val = train_test_split(temp_data, train_labels.age,
-                                                          test_size=0.15, random_state=42)
+                                                          test_size=0.15, random_state=rnd_state)
         
         # Fit and evaluate model
         curr_val_mse, curr_test_mse, curr_val_r_val, curr_test_r_val = fit_and_evaluate_model(
