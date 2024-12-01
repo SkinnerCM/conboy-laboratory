@@ -3,7 +3,7 @@
  File Name:     figure_plots.py
  Author:        Colin M. Skinner
  Date Created:  2024-08-02
- Last Modified: 2024-11-26
+ Last Modified: 2024-11-30
 
  Description:   This script provides functions for generating and visualizing statistical plots to evaluate machine learning 
                 model performance on age prediction tasks. The plots include scatter plots, residual analyses, and comparisons 
@@ -189,7 +189,7 @@ def fig3_plots(df,df_meta, model, model_selection, d_condition, flag=False):
 
 
 
-def fig4_plots(df,df_meta, fsw_selection, reference, method, d_condition, flag=False):
+def fig4_plots(df,df_meta, mfss_selection, reference, method, d_condition, flag=False):
 
     """
     Generate a series of plots for visualizing model predictions, residuals, and statistical analysis on age predictions.
@@ -205,12 +205,12 @@ def fig4_plots(df,df_meta, fsw_selection, reference, method, d_condition, flag=F
         The data frame containing the features used for prediction.
     df_meta : pd.DataFrame
         The metadata frame containing age, disease state, and other relevant information.
-    fsw_selection : list
+    mfss_selection : list
         The list of feature selection columns to use in the model prediction.
     reference : str
         The reference label for the healthy group (typically 'Control').
     method : str
-        The method used for the model (e.g., 'fsw_model').
+        The method used for the model (e.g., 'mfss_model').
     d_condition : str
         The disease state to compare with the control group.
     flag : bool, optional, default=False
@@ -237,8 +237,8 @@ def fig4_plots(df,df_meta, fsw_selection, reference, method, d_condition, flag=F
         hue_val = df_meta.disease_state
     
     df_transform = coherence_transform(df, d_shift)
-    df_preds = fsw_model.predict(df_transform[fsw_selection])
-    df_meta['fsw preds'] = df_preds
+    df_preds = mfss_model.predict(df_transform[mfss_selection])
+    df_meta['mfss preds'] = df_preds
 
     regression = stats.linregress(df_meta[df_meta.healthy==0].age, df_preds[df_meta.healthy==0])
     slope, intercept, rvalue, pvalue, stderr = regression
@@ -271,7 +271,7 @@ def fig4_plots(df,df_meta, fsw_selection, reference, method, d_condition, flag=F
     plt.title('{}: Control r={:.2f}, p={:.1g}, Control MAE={:.1f} yrs'.format(df_meta.series_id[0], rvalue, pvalue, mae),fontsize=20)
 
     
-    df_meta['Residuals'] = df_meta['fsw preds'] - df_meta.age
+    df_meta['Residuals'] = df_meta['mfss preds'] - df_meta.age
 
     from scipy.stats import ttest_ind
     h_resids = df_meta[hue_val=='Control'].Residuals
