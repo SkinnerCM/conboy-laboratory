@@ -190,7 +190,7 @@ def fig3_plots(df,df_meta, model, model_selection, d_condition, flag=False):
 
 
 
-def fig4_plots(df,df_meta, model, mfss_selection,coherence_shift, reference, method, d_condition, flag=False):
+def fig4_plots(df,df_meta, model, mfss_selection,coherence_shift, d_condition, flag=False):
 
     """
     Generate a series of plots for visualizing model predictions, residuals, and statistical analysis on age predictions.
@@ -208,10 +208,6 @@ def fig4_plots(df,df_meta, model, mfss_selection,coherence_shift, reference, met
         The metadata frame containing age, disease state, and other relevant information.
     mfss_selection : list
         The list of feature selection columns to use in the model prediction.
-    reference : str
-        The reference label for the healthy group (typically 'Control').
-    method : str
-        The method used for the model (e.g., 'mfss_model').
     d_condition : str
         The disease state to compare with the control group.
     flag : bool, optional, default=False
