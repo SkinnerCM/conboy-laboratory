@@ -31,6 +31,7 @@ import matplotlib.pyplot as plt
 from scipy import stats
 from sklearn import metrics
 from utils.stats_utils import cohens_d
+from coherence_analysis_and_transform import coherence_transform
 
 def fig3_plots(df,df_meta, model, model_selection, d_condition, flag=False):
     
@@ -189,7 +190,7 @@ def fig3_plots(df,df_meta, model, model_selection, d_condition, flag=False):
 
 
 
-def fig4_plots(df,df_meta, mfss_selection, reference, method, d_condition, flag=False):
+def fig4_plots(df,df_meta, model, mfss_selection,coherence_shift, reference, method, d_condition, flag=False):
 
     """
     Generate a series of plots for visualizing model predictions, residuals, and statistical analysis on age predictions.
@@ -236,8 +237,8 @@ def fig4_plots(df,df_meta, mfss_selection, reference, method, d_condition, flag=
     else:
         hue_val = df_meta.disease_state
     
-    df_transform = coherence_transform(df, d_shift)
-    df_preds = mfss_model.predict(df_transform[mfss_selection])
+    df_transform = coherence_transform(df, coherence_shift)
+    df_preds = model.predict(df_transform[mfss_selection])
     df_meta['mfss preds'] = df_preds
 
     regression = stats.linregress(df_meta[df_meta.healthy==0].age, df_preds[df_meta.healthy==0])
