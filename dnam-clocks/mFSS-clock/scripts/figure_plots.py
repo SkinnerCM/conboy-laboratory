@@ -237,7 +237,7 @@ def fig4_plots(df,df_meta, model, mfss_selection,coherence_shift, d_condition, f
     df_preds = model.predict(df_transform[mfss_selection])
     df_meta['mfss preds'] = df_preds
 
-    regression = stats.linregress(df_meta[df_meta.healthy==0].age, df_preds[df_meta.healthy==0])
+    regression = stats.linregress(df_meta[df_meta.disease==0].age, df_preds[df_meta.disease==0])
     slope, intercept, rvalue, pvalue, stderr = regression
 
     mae = metrics.mean_absolute_error(df_meta.age, df_preds)
