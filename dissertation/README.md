@@ -60,4 +60,4 @@ For inquiries about permissions or collaboration, please contact skinner.colinm@
 ## Citation
 If you use this repository in your work, please cite:
 
-Colin M. Skinner. "Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging." Ph.D. Dissertation, University of California, Berkeley, 2025. (\<DOI or link\>)
+Colin M. Skinner. "Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging." Ph.D. Dissertation, University of California, Berkeley, 2025. [On ProQuest](https://media.proquest.com/media/hms/PFT/2/Nbond?_s=I6e4mSDe6L1GD%2FOSvwEU7C1pJy8%3D)
