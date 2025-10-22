@@ -1,6 +1,6 @@
 # Dissertation Repository: Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging
 
-Welcome to the repository for my dissertation, **"Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging"**, submitted in partial fulfillment of the requirements for the Joint Doctor of Philosophy with University of California, San Francisco in Bioengineering and the Designated Emphasis in Computational and Genomic Biology in the Graduate Division of the University of California, Berkeley. This repository contains all the code, figures, and Jupyter notebooks used to generate the results and figures presented in the dissertation.
+Welcome to the repository for my dissertation, **"Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging"** available [on ProQuest](https://media.proquest.com/media/hms/PFT/2/Nbond?_s=I6e4mSDe6L1GD%2FOSvwEU7C1pJy8%3D), submitted in partial fulfillment of the requirements for the Joint Doctor of Philosophy with University of California, San Francisco in Bioengineering and the Designated Emphasis in Computational and Genomic Biology in the Graduate Division of the University of California, Berkeley. This repository contains all the code, figures, and Jupyter notebooks used to generate the results and figures presented in the dissertation.
 
 ## Repository Contents
 
@@ -60,4 +60,4 @@ For inquiries about permissions or collaboration, please contact skinner.colinm@
 ## Citation
 If you use this repository in your work, please cite:
 
-Colin M. Skinner. "Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging." Ph.D. Dissertation, University of California, Berkeley, 2025. [On ProQuest](https://media.proquest.com/media/hms/PFT/2/Nbond?_s=I6e4mSDe6L1GD%2FOSvwEU7C1pJy8%3D)
+Colin M. Skinner. "Hypothesis-driven training for DNA Methylation Clocks and Feature Rectification for Linear Model Coherence to Detect Inflammaging." Ph.D. Dissertation, University of California, Berkeley, 2025. 
